@@ -8,6 +8,8 @@ import java.lang.StringBuilder
 import java.util.HashMap
 
 class TalkingHead(val context: Context) {
+    private var lastSpeech = System.currentTimeMillis()
+
     private val textToSpeech = TextToSpeech(context) {
         Timber.d("TTS init: $it")
     }
@@ -16,8 +18,17 @@ class TalkingHead(val context: Context) {
     }
 
     fun say(text: String) {
-        if (text.contains("other") || !textToSpeech.isSpeaking)
-            textToSpeech.speak(createText(text), TextToSpeech.QUEUE_ADD, null, null)
+
+        val timeSinceLastSpeech = System.currentTimeMillis() - lastSpeech
+
+        if (timeSinceLastSpeech < 1000 * 15)
+            return
+
+        lastSpeech = System.currentTimeMillis()
+
+        if (text.toLowerCase().contains("other") || !textToSpeech.isSpeaking) {
+            textToSpeech.speak(createText(text), TextToSpeech.QUEUE_FLUSH, null, null)
+        }
     }
 
     private var count = 0
