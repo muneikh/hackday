@@ -14,21 +14,18 @@ class TalkingHead(val context: Context) {
         Timber.d("TTS init: $it")
     }
 
-    init {
-    }
-
     fun say(text: String) {
-
         val timeSinceLastSpeech = System.currentTimeMillis() - lastSpeech
-
         if (timeSinceLastSpeech < 1000 * 15)
+            return
+        if (text.toLowerCase().contains("other"))
+            return
+        if (textToSpeech.isSpeaking)
             return
 
         lastSpeech = System.currentTimeMillis()
 
-        if (text.toLowerCase().contains("other") || !textToSpeech.isSpeaking) {
-            textToSpeech.speak(createText(text), TextToSpeech.QUEUE_FLUSH, null, null)
-        }
+        textToSpeech.speak(createText(text), TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     private var count = 0
