@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="80dp"
             android:textColor="#FFF"
-            android:textSize="20sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
     </FrameLayout>

@@ -21,4 +21,14 @@
     <string name="toggle_turn_on">NN:On</string>
     <string name="toggle_turn_off">NN:Off</string>
     <string name="toggle">Use NNAPI</string>
+
+
+    <string name="speechAmerica">Hi %s, please make America GREAT again</string>
+    <string name="speechGermay">Guten Tag %s, kommst du wirklich aus Ost Deutschland? Geil.</string>
+    <string name="speechSweden">Hey %s buddy, who do you think you are?</string>
+    <string name="speechPakistan">Oi %s, are you not Indian? Where the hell is Pakistan?</string>
+    <string name="speechAustrlia">Gday %s, is that a knife in your pocket or are you just happy to see me?</string>
+    <string name="speechFrance">Bonjour %s, there is a baguette in the oven for you. Merci.</string>
+
+
 </resources>

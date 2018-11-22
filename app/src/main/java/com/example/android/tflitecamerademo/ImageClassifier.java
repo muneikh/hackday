@@ -31,6 +31,7 @@ import java.nio.channels.FileChannel;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -127,6 +128,31 @@ public class ImageClassifier {
     return textToShow;
   }
 
+  /** Classifies a frame from the preview stream. */
+  HashMap<String, Float> classifyFrameForResults(Bitmap bitmap) {
+
+    HashMap<String, Float> results = new HashMap<>();
+    if (tflite == null) {
+      Log.e(TAG, "Image classifier has not been initialized; Skipped.");
+      return results;
+    }
+    convertBitmapToByteBuffer(bitmap);
+    // Here's where the magic happens!!!
+    long startTime = SystemClock.uptimeMillis();
+    tflite.run(imgData, labelProbArray);
+    long endTime = SystemClock.uptimeMillis();
+    Log.d(TAG, "Timecost to run model inference: " + Long.toString(endTime - startTime));
+
+    // smooth the results
+    applyFilter();
+
+    for (int i = 0; i<labelList.size();i++){
+      results.put(labelList.get(i), labelProbArray[0][i]);
+    }
+
+    return results;
+  }
+
   void applyFilter(){
     int num_labels =  labelList.size();
 
@@ -202,11 +228,12 @@ public class ImageClassifier {
     Log.d(TAG, "Timecost to put values into ByteBuffer: " + Long.toString(endTime - startTime));
   }
 
+
   /** Prints top-K labels, to be shown in UI as the results. */
   private String printTopKLabels() {
     for (int i = 0; i < labelList.size(); ++i) {
       sortedLabels.add(
-          new AbstractMap.SimpleEntry<>(labelList.get(i), labelProbArray[0][i]));
+              new AbstractMap.SimpleEntry<>(labelList.get(i), labelProbArray[0][i]));
       if (sortedLabels.size() > RESULTS_TO_SHOW) {
         sortedLabels.poll();
       }
